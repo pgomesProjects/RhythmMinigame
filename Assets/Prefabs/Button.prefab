@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 3735267176941275560}
   m_Layer: 0
   m_Name: Button
-  m_TagString: Untagged
+  m_TagString: Button
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -97,6 +97,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buttonIndex: 0
+  idleColor: {r: 0.38039216, g: 0.7411765, b: 1, a: 1}
+  pressColor: {r: 0.68956923, g: 0.91407263, b: 0.9811321, a: 1}
 --- !u!65 &665246598288867963
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -108,7 +110,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.0000001, y: 2, z: 2}
+  m_Size: {x: 1.0000001, y: 2, z: 4}
   m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
 --- !u!54 &3735267176941275560
 Rigidbody:

@@ -7,6 +7,8 @@ public class ButtonManager : MonoBehaviour
     public int buttonIndex;
 
     private Renderer rend;
+    public Color idleColor;
+    public Color pressColor;
     private Vector3 scale;
     private Vector3 scaleChange;
 
@@ -14,6 +16,7 @@ public class ButtonManager : MonoBehaviour
     void Start()
     {
         rend = gameObject.GetComponent<Renderer>();
+
         scale = new Vector3(1.5f, 0.25f, 1.5f);
         scaleChange = new Vector3(1.5f, 0.125f, 1.5f);
     }
@@ -23,81 +26,53 @@ public class ButtonManager : MonoBehaviour
     {
         switch(buttonIndex) {
             case 0:
-                if (Input.GetKey(KeyCode.A))
+                if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
                 {
+                    rend.material.SetColor("_Color", pressColor);
                     gameObject.transform.localScale = scaleChange;
                 }
                 else
                 {
+                    rend.material.SetColor("_Color", idleColor);
                     gameObject.transform.localScale = scale;
                 }
                 break;
             case 1:
-                if (Input.GetKey(KeyCode.S))
+                if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
                 {
+                    rend.material.SetColor("_Color", pressColor);
                     gameObject.transform.localScale = scaleChange;
                 }
                 else
                 {
+                    rend.material.SetColor("_Color", idleColor);
                     gameObject.transform.localScale = scale;
                 }
                 break;
             case 2:
-                if (Input.GetKey(KeyCode.W))
+                if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
                 {
+                    rend.material.SetColor("_Color", pressColor);
                     gameObject.transform.localScale = scaleChange;
                 }
                 else
                 {
+                    rend.material.SetColor("_Color", idleColor);
                     gameObject.transform.localScale = scale;
                 }
                 break;
             case 3:
-                if (Input.GetKey(KeyCode.D))
+                if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
                 {
+                    rend.material.SetColor("_Color", pressColor);
                     gameObject.transform.localScale = scaleChange;
                 }
                 else
                 {
+                    rend.material.SetColor("_Color", idleColor);
                     gameObject.transform.localScale = scale;
                 }
                 break;
         }   
-    }
-
-    private void OnTriggerStay(Collider other)
-    {
-        if(other.CompareTag("Note"))
-        {
-            switch (buttonIndex)
-            {
-                case 0:
-                    if (Input.GetKeyDown(KeyCode.A))
-                    {
-                        Destroy(other.gameObject);
-                    }
-                    break;
-                case 1:
-                    if (Input.GetKeyDown(KeyCode.S))
-                    {
-                        Destroy(other.gameObject);
-                    }
-
-                    break;
-                case 2:
-                    if (Input.GetKeyDown(KeyCode.W))
-                    {
-                        Destroy(other.gameObject);
-                    }
-
-                    break;
-                case 3:
-                    if (Input.GetKeyDown(KeyCode.D))
-                    {
-                        Destroy(other.gameObject);
-                    }
-                    break;
-            }
-        }
     }
 }
