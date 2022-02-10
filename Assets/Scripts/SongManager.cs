@@ -5,6 +5,7 @@ using UnityEngine;
 public class SongManager : MonoBehaviour
 {
     public float bpm;
+    public float noteSpawnZ, buttonZ;
     public float scrollSpeed;
     [HideInInspector]
     public float noteSpeed;
@@ -12,7 +13,7 @@ public class SongManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        noteSpeed = ((28.75f / (bpm / 60)) / 2) * scrollSpeed;
+        noteSpeed = (noteSpawnZ - buttonZ) / 4 * scrollSpeed;
         //Play instrumental and vocals at the same time
         FindObjectOfType<AudioManager>().Play("Sadness_Instrumental", 1.0f); // Play music upon level start
         FindObjectOfType<AudioManager>().Play("Sadness_Vocals", 1.0f); // Play music upon level start

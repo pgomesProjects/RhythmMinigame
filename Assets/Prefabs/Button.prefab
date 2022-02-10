@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 5975903741697353991}
   - component: {fileID: 6722863588374530296}
   - component: {fileID: 2052344182947030845}
-  - component: {fileID: 665246598288867963}
   - component: {fileID: 3735267176941275560}
+  - component: {fileID: 8966079685484029462}
   m_Layer: 0
   m_Name: Button
   m_TagString: Button
@@ -99,19 +99,6 @@ MonoBehaviour:
   buttonIndex: 0
   idleColor: {r: 0.38039216, g: 0.7411765, b: 1, a: 1}
   pressColor: {r: 0.68956923, g: 0.91407263, b: 0.9811321, a: 1}
---- !u!65 &665246598288867963
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3602589438655523000}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1.0000001, y: 2, z: 4}
-  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
 --- !u!54 &3735267176941275560
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -128,3 +115,16 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!65 &8966079685484029462
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3602589438655523000}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.0000001, y: 2, z: 0.5}
+  m_Center: {x: 0.000000059604645, y: 0, z: 0.25}

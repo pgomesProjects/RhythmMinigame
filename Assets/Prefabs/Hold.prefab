@@ -11,7 +11,8 @@ GameObject:
   - component: {fileID: 350263290332621439}
   - component: {fileID: 350263290332621436}
   - component: {fileID: 350263290332621437}
-  - component: {fileID: 5565742413003916158}
+  - component: {fileID: 1716172522736999015}
+  - component: {fileID: 2724303334288633591}
   m_Layer: 0
   m_Name: Hold
   m_TagString: Hold
@@ -82,7 +83,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &5565742413003916158
+--- !u!114 &1716172522736999015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 350263290332621432}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4c0d4b5aa29bc34494ba9bbb6597954, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!65 &2724303334288633591
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -93,5 +106,5 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 10.000001, y: 0.05, z: 10}
-  m_Center: {x: 0.0000038146973, y: 0, z: 0}
+  m_Size: {x: 10, y: 2.220446e-16, z: 10}
+  m_Center: {x: 0, y: 0, z: -10}
