@@ -19,6 +19,7 @@ public class Beatmap_Read : MonoBehaviour
 
     private float gameTime;
     private int noteCount;
+    private float storedRot;
 
     // Start is called before the first frame update
     void Start()
@@ -43,6 +44,7 @@ public class Beatmap_Read : MonoBehaviour
         }
 
         isPlaying = true;
+        storedRot = 0;
     }
 
     private void Update()
@@ -51,7 +53,7 @@ public class Beatmap_Read : MonoBehaviour
         //Debug.Log("Time: " + (int)gameTime);
         for(int i = 0; i < noteCount; i++)
         {
-            if(RoughlyEqual(gameTime, (float.Parse(allNoteData[i, 1])) - (4 / FindObjectOfType<SongManager>().scrollSpeed)) && allNoteData[i, 3] == "false")
+            if(RoughlyEqual(gameTime, (float.Parse(allNoteData[i, 1]) / FindObjectOfType<SongManager>().measureBeats) - (4 / FindObjectOfType<SongManager>().scrollSpeed)) && allNoteData[i, 3] == "false")
             {
                 SpawnNote(i);
             }
@@ -72,8 +74,11 @@ public class Beatmap_Read : MonoBehaviour
         if (allNoteData[currentIndex, 0] == "left")
         {
             note.GetComponent<NoteManager>().noteColor = new Color32(204, 91, 154, 255);
+            note.transform.Find("Arrow").Rotate(0.0f, -storedRot, 0.0f, Space.World);
+            note.transform.Find("Arrow").Rotate(0.0f, 90.0f, 0.0f, Space.World);
+            storedRot = 90.0f;
             Instantiate(note, noteSpawners[0].transform.position, note.transform.rotation);
-            
+
             //If there are hold segments, generate them
             if (numOfHoldNotes > 0)
             {
@@ -89,6 +94,9 @@ public class Beatmap_Read : MonoBehaviour
         else if (allNoteData[currentIndex, 0] == "down")
         {
             note.GetComponent<NoteManager>().noteColor = new Color32(0, 231, 254, 255);
+            note.transform.Find("Arrow").Rotate(0.0f, -storedRot, 0.0f, Space.World);
+            note.transform.Find("Arrow").Rotate(0.0f, 0.0f, 0.0f, Space.World);
+            storedRot = 0.0f;
             Instantiate(note, noteSpawners[1].transform.position, note.transform.rotation);
 
             //If there are hold segments, generate them
@@ -106,6 +114,9 @@ public class Beatmap_Read : MonoBehaviour
         else if (allNoteData[currentIndex, 0] == "up")
         {
             note.GetComponent<NoteManager>().noteColor = new Color32(4, 197, 11, 255);
+            note.transform.Find("Arrow").Rotate(0.0f, -storedRot, 0.0f, Space.World);
+            note.transform.Find("Arrow").Rotate(0.0f, 180.0f, 0.0f, Space.World);
+            storedRot = 180.0f;
             Instantiate(note, noteSpawners[2].transform.position, note.transform.rotation);
 
             //If there are hold segments, generate them
@@ -123,6 +134,9 @@ public class Beatmap_Read : MonoBehaviour
         else if (allNoteData[currentIndex, 0] == "right")
         {
             note.GetComponent<NoteManager>().noteColor = new Color32(255, 78, 68, 255);
+            note.transform.Find("Arrow").Rotate(0.0f, -storedRot, 0.0f, Space.World);
+            note.transform.Find("Arrow").Rotate(0.0f, -90.0f, 0.0f, Space.World);
+            storedRot = -90.0f;
             Instantiate(note, noteSpawners[3].transform.position, note.transform.rotation);
 
             //If there are hold segments, generate them

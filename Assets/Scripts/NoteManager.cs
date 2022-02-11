@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 public class NoteManager : MonoBehaviour
 {
     private float lowerBound = -7.0f;
@@ -33,25 +32,25 @@ public class NoteManager : MonoBehaviour
                 case 0:
                     if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
                     {
-                        Destroy(gameObject);
+                        NoteHit();
                     }
                     break;
                 case 1:
                     if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
                     {
-                        Destroy(gameObject);
+                        NoteHit();
                     }
                     break;
                 case 2:
                     if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
                     {
-                        Destroy(gameObject);
+                        NoteHit();
                     }
                     break;
                 case 3:
                     if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
                     {
-                        Destroy(gameObject);
+                        NoteHit();
                     }
                     break;
             }
@@ -61,6 +60,18 @@ public class NoteManager : MonoBehaviour
             Destroy(gameObject);
     }
 
+    private void NoteHit()
+    {
+        if(Mathf.Abs(currentButton.transform.position.z - gameObject.transform.position.z) <= 0.19f)
+            FindObjectOfType<SongManager>().AddToCombo(0);
+        else if (Mathf.Abs(currentButton.transform.position.z - gameObject.transform.position.z) <= 0.3f)
+            FindObjectOfType<SongManager>().AddToCombo(1);
+        else if (Mathf.Abs(currentButton.transform.position.z - gameObject.transform.position.z) <= 0.494f)
+            FindObjectOfType<SongManager>().ResetCombo(2);
+        else if (Mathf.Abs(currentButton.transform.position.z - gameObject.transform.position.z) <= 0.74f)
+            FindObjectOfType<SongManager>().ResetCombo(3);
+        Destroy(gameObject);
+    }//end of NoteHit
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Button"))
@@ -76,6 +87,7 @@ public class NoteManager : MonoBehaviour
         {
             canHit = false;
             currentButton = null;
+            FindObjectOfType<SongManager>().ResetCombo(4);
         }
     }
 }
