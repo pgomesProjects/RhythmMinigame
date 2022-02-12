@@ -6,12 +6,16 @@ using TMPro;
 
 public class SongManager : MonoBehaviour
 {
+    [HideInInspector]
     public float bpm;
     public float noteSpawnZ, buttonZ;
+    [HideInInspector]
     public float scrollSpeed;
+    [HideInInspector]
     public int measureBeats = 8;
     public TextMeshProUGUI comboText;
     public TextMeshProUGUI statText;
+    [HideInInspector]
     public float songLength = 144;
     [HideInInspector]
     public float noteSpeed;
@@ -22,17 +26,35 @@ public class SongManager : MonoBehaviour
 
     private AudioClip gameMusic;
 
+    private bool statTextShown = false;
+    private float statsTextCooldown = 0.5f;
+    private float currentCooldown;
+    private float currentScrollSpeed;
+
     enum Hit { Perfect, Great, Good, Bad, Miss };
+
+    void Awake()
+    {
+        bpm = FindObjectOfType<SongInfo>().bpm;
+        scrollSpeed = FindObjectOfType<SongInfo>().scrollSpeed;
+        measureBeats = FindObjectOfType<SongInfo>().measureBeats;
+        songLength = FindObjectOfType<SongInfo>().songLength;
+    }
 
     // Start is called before the first frame update
     void Start()
     {
         noteSpeed = (noteSpawnZ - buttonZ) / 4 * scrollSpeed;
+        currentScrollSpeed = scrollSpeed;
         //Stats: Perfect, Great, Good, Bad, Miss
         stats = new int[5];
+
+        comboText.alpha = 0;
+        statText.alpha = 0;
+
         //Play instrumental and vocals at the same time
-        FindObjectOfType<AudioManager>().Play("Sadness_Instrumental", 1.0f); // Play music upon level start
-        FindObjectOfType<AudioManager>().Play("Sadness_Vocals", 1.0f); // Play music upon level start
+        FindObjectOfType<AudioManager>().Play(FindObjectOfType<SongInfo>().instrumentalFile, FindObjectOfType<SongInfo>().instrumentalVolume); // Play music upon level start
+        FindObjectOfType<AudioManager>().Play(FindObjectOfType<SongInfo>().vocalsFile, FindObjectOfType<SongInfo>().vocalsVolume); // Play music upon level start
 
         StartCoroutine(EndSong());
     }
@@ -40,9 +62,24 @@ public class SongManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
-    }
+        //If the scroll speed changes in any way mid-game, change the note speed
+        if(currentScrollSpeed != scrollSpeed)
+        {
+            currentScrollSpeed = scrollSpeed;
+            noteSpeed = (noteSpawnZ - buttonZ) / 4 * scrollSpeed;
+        }
 
+        //If stats are showing, use a cooldown to make them invisible again
+        if (statTextShown)
+        {
+            currentCooldown += Time.deltaTime;
+            if (currentCooldown >= statsTextCooldown)
+            {
+                statText.alpha = 0;
+                statTextShown = false;
+            }
+        }
+    }
     IEnumerator EndSong()
     {
         yield return new WaitForSeconds(songLength);
@@ -53,38 +90,59 @@ public class SongManager : MonoBehaviour
     public void AddToCombo(int hit)
     {
         combo += 1;
+        if(combo == 10)
+            comboText.alpha = 1;
+        DisplayCombo(hit);
+    }//end of AddToCombo
+
+    void DisplayCombo(int hit)
+    {
         comboText.text = "Combo: " + combo;
+
         switch (hit)
         {
             case (int)Hit.Perfect:
+                statTextShown = true;
+                statText.alpha = 1;
+                currentCooldown = 0;
                 stats[(int)Hit.Perfect] += 1;
                 statText.text = "Perfect!";
                 break;
             case (int)Hit.Great:
+                statTextShown = true;
+                statText.alpha = 1;
+                currentCooldown = 0;
                 stats[(int)Hit.Great] += 1;
                 statText.text = "Great!";
                 break;
-        }
-    }//end of AddToCombo
-
-    public void ResetCombo(int hit)
-    {
-        combo = 0;
-        comboText.text = "Combo: " + combo;
-        switch(hit)
-        {
             case (int)Hit.Good:
+                statTextShown = true;
+                statText.alpha = 1;
+                currentCooldown = 0;
                 stats[(int)Hit.Good] += 1;
                 statText.text = "Good!";
                 break;
             case (int)Hit.Bad:
+                statTextShown = true;
+                statText.alpha = 1;
+                currentCooldown = 0;
                 stats[(int)Hit.Bad] += 1;
                 statText.text = "Bad!";
                 break;
             case (int)Hit.Miss:
+                statTextShown = true;
+                statText.alpha = 1;
+                currentCooldown = 0;
                 stats[(int)Hit.Miss] += 1;
                 statText.text = "Miss!";
                 break;
         }
+    }
+
+    public void ResetCombo(int hit)
+    {
+        combo = 0;
+        comboText.alpha = 0;
+        DisplayCombo(hit);
     }//end of AddToCombo
 }

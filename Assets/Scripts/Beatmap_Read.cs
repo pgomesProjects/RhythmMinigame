@@ -7,7 +7,6 @@ using System.Linq;
 
 public class Beatmap_Read : MonoBehaviour
 {
-    public string fileName;
     public GameObject[] noteSpawners;
     public GameObject note;
     public GameObject hold;
@@ -17,14 +16,16 @@ public class Beatmap_Read : MonoBehaviour
     [HideInInspector]
     public bool isPlaying;
 
+    private string fileName;
     private float gameTime;
     private int noteCount;
-    private float storedRot;
+    private int currentNoteID;
 
     // Start is called before the first frame update
     void Start()
     {
-        string readFromFilePath = Application.dataPath + "/Data/" + fileName;
+        fileName = FindObjectOfType<SongInfo>().beatmapFile;
+        string readFromFilePath = Application.streamingAssetsPath + "/Data/" + fileName;
 
         //Get all lines from text file
         List<string> allNotes = File.ReadAllLines(readFromFilePath).ToList();
@@ -43,8 +44,8 @@ public class Beatmap_Read : MonoBehaviour
             counter++;
         }
 
+        currentNoteID = 1;
         isPlaying = true;
-        storedRot = 0;
     }
 
     private void Update()
@@ -70,86 +71,36 @@ public class Beatmap_Read : MonoBehaviour
 
     private void SpawnNote(int currentIndex)
     {
-        int numOfHoldNotes = int.Parse(allNoteData[currentIndex, 2]);
+        note.GetComponent<NoteManager>().holdCount = int.Parse(allNoteData[currentIndex, 2]);
+        note.GetComponent<NoteManager>().noteID = currentNoteID;
         if (allNoteData[currentIndex, 0] == "left")
         {
             note.GetComponent<NoteManager>().noteColor = new Color32(204, 91, 154, 255);
-            note.transform.Find("Arrow").Rotate(0.0f, -storedRot, 0.0f, Space.World);
-            note.transform.Find("Arrow").Rotate(0.0f, 90.0f, 0.0f, Space.World);
-            storedRot = 90.0f;
+            note.GetComponent<NoteManager>().noteRot = 90.0f;
             Instantiate(note, noteSpawners[0].transform.position, note.transform.rotation);
-
-            //If there are hold segments, generate them
-            if (numOfHoldNotes > 0)
-            {
-                Vector3 spawnLoc = noteSpawners[0].transform.position;
-                for (int i = 1; i <= numOfHoldNotes; i++)
-                {
-                    hold.GetComponent<HoldManager>().holdColor = new Color32(204, 91, 154, 255);
-                    Instantiate(hold, new Vector3(spawnLoc.x, spawnLoc.y, spawnLoc.z + i), hold.transform.rotation);
-                }
-            }
         }
 
         else if (allNoteData[currentIndex, 0] == "down")
         {
             note.GetComponent<NoteManager>().noteColor = new Color32(0, 231, 254, 255);
-            note.transform.Find("Arrow").Rotate(0.0f, -storedRot, 0.0f, Space.World);
-            note.transform.Find("Arrow").Rotate(0.0f, 0.0f, 0.0f, Space.World);
-            storedRot = 0.0f;
+            note.GetComponent<NoteManager>().noteRot = 0.0f;
             Instantiate(note, noteSpawners[1].transform.position, note.transform.rotation);
-
-            //If there are hold segments, generate them
-            if (numOfHoldNotes > 0)
-            {
-                Vector3 spawnLoc = noteSpawners[1].transform.position;
-                for (int i = 1; i <= numOfHoldNotes; i++)
-                {
-                    hold.GetComponent<HoldManager>().holdColor = new Color32(0, 231, 254, 255);
-                    Instantiate(hold, new Vector3(spawnLoc.x, spawnLoc.y, spawnLoc.z + i), hold.transform.rotation);
-                }
-            }
         }
 
         else if (allNoteData[currentIndex, 0] == "up")
         {
             note.GetComponent<NoteManager>().noteColor = new Color32(4, 197, 11, 255);
-            note.transform.Find("Arrow").Rotate(0.0f, -storedRot, 0.0f, Space.World);
-            note.transform.Find("Arrow").Rotate(0.0f, 180.0f, 0.0f, Space.World);
-            storedRot = 180.0f;
+            note.GetComponent<NoteManager>().noteRot = 180.0f;
             Instantiate(note, noteSpawners[2].transform.position, note.transform.rotation);
-
-            //If there are hold segments, generate them
-            if (numOfHoldNotes > 0)
-            {
-                Vector3 spawnLoc = noteSpawners[2].transform.position;
-                for (int i = 1; i <= numOfHoldNotes; i++)
-                {
-                    hold.GetComponent<HoldManager>().holdColor = new Color32(4, 197, 11, 255);
-                    Instantiate(hold, new Vector3(spawnLoc.x, spawnLoc.y, spawnLoc.z + i), hold.transform.rotation);
-                }
-            }
         }
 
         else if (allNoteData[currentIndex, 0] == "right")
         {
             note.GetComponent<NoteManager>().noteColor = new Color32(255, 78, 68, 255);
-            note.transform.Find("Arrow").Rotate(0.0f, -storedRot, 0.0f, Space.World);
-            note.transform.Find("Arrow").Rotate(0.0f, -90.0f, 0.0f, Space.World);
-            storedRot = -90.0f;
+            note.GetComponent<NoteManager>().noteRot = -90.0f;
             Instantiate(note, noteSpawners[3].transform.position, note.transform.rotation);
-
-            //If there are hold segments, generate them
-            if (numOfHoldNotes > 0)
-            {
-                Vector3 spawnLoc = noteSpawners[3].transform.position;
-                for (int i = 1; i <= numOfHoldNotes; i++)
-                {
-                    hold.GetComponent<HoldManager>().holdColor = new Color32(255, 78, 68, 255);
-                    Instantiate(hold, new Vector3(spawnLoc.x, spawnLoc.y, spawnLoc.z + i), hold.transform.rotation);
-                }
-            }
         }
+        currentNoteID += 1;
         allNoteData[currentIndex, 3] = "true";
     }//end of SpawnNote
 

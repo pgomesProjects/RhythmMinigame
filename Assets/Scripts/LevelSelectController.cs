@@ -17,8 +17,8 @@ public class LevelSelectController : MonoBehaviour
         
     }
 
-    public void PlayLevel(string levelName)
+    public void PlayLevel()
     {
-        SceneManager.LoadScene(levelName);
+        SceneManager.LoadScene("SongLevel");
     }//end of PlayLevel
 }

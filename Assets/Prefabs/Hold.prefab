@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 350263290332621436}
   - component: {fileID: 350263290332621437}
   - component: {fileID: 1716172522736999015}
-  - component: {fileID: 2724303334288633591}
+  - component: {fileID: 4380074940886648185}
   m_Layer: 0
   m_Name: Hold
   m_TagString: Hold
@@ -95,7 +95,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4c0d4b5aa29bc34494ba9bbb6597954, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!65 &2724303334288633591
+  parentID: 0
+  noteIndex: 0
+  allNotesCount: 0
+  holdColor: {r: 0, g: 0, b: 0, a: 0}
+--- !u!65 &4380074940886648185
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -106,5 +110,5 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 10, y: 2.220446e-16, z: 10}
-  m_Center: {x: 0, y: 0, z: -10}
+  m_Size: {x: 10, y: 0.1, z: 10}
+  m_Center: {x: 0, y: 0, z: 10}

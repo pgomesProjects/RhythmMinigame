@@ -177,6 +177,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fcbf9cbc81d526c48ae57d2ecb8aa611, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  holdObject: {fileID: 350263290332621432, guid: 2bbfe4337b40e674c91ca2e5921702e0, type: 3}
+  noteRot: 0
+  holdNotes: []
+  holdCount: 3
   noteColor: {r: 0, g: 0.90588236, b: 0.99607843, a: 1}
 --- !u!65 &8824141803833397030
 BoxCollider:

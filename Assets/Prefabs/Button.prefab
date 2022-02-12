@@ -180,6 +180,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buttonIndex: 0
   arrow: {fileID: 882743519404450743}
+  playerControls:
+    m_Name: Player Controls
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: b06764a9-dccc-4d6e-85e1-bb61e08e6272
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
   idleColor: {r: 0.38039216, g: 0.7411765, b: 1, a: 1}
   pressColor: {r: 0.68956923, g: 0.91407263, b: 0.9811321, a: 1}
 --- !u!54 &3735267176941275560
@@ -209,5 +217,5 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.0000001, y: 2, z: 0.5}
-  m_Center: {x: 0.000000059604645, y: 0, z: 0.25}
+  m_Size: {x: 1.0000002, y: 2, z: 0.6786477}
+  m_Center: {x: 0.00000007947286, y: 0, z: 0.33932385}

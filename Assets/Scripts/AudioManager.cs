@@ -7,7 +7,8 @@ public class AudioManager : MonoBehaviour
 
     public Sound[] sounds;
 
-    // Start is called before the first frame update
+    public static AudioManager instance;
+
     void Awake()
     {
         foreach (Sound s in sounds)
@@ -19,6 +20,18 @@ public class AudioManager : MonoBehaviour
             s.source.loop = s.loop;
         }
     }
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        //Make sure this object does not destroy itself when loading between scenes
+        if (instance != null)
+            Destroy(gameObject);
+        else
+            instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
+
     public void Play(string name, float audioVol)
     {
         Sound s = Array.Find(sounds, sound => sound.name == name);
