@@ -35,10 +35,10 @@ public class SongManager : MonoBehaviour
 
     void Awake()
     {
-        bpm = FindObjectOfType<SongInfo>().bpm;
-        scrollSpeed = FindObjectOfType<SongInfo>().scrollSpeed;
-        measureBeats = FindObjectOfType<SongInfo>().measureBeats;
-        songLength = FindObjectOfType<SongInfo>().songLength;
+        bpm = SongInfo.Instance.bpm;
+        scrollSpeed = SongInfo.Instance.scrollSpeed;
+        measureBeats = SongInfo.Instance.measureBeats;
+        songLength = SongInfo.Instance.songLength;
     }
 
     // Start is called before the first frame update
@@ -53,8 +53,8 @@ public class SongManager : MonoBehaviour
         statText.alpha = 0;
 
         //Play instrumental and vocals at the same time
-        FindObjectOfType<AudioManager>().Play(FindObjectOfType<SongInfo>().instrumentalFile, FindObjectOfType<SongInfo>().instrumentalVolume); // Play music upon level start
-        FindObjectOfType<AudioManager>().Play(FindObjectOfType<SongInfo>().vocalsFile, FindObjectOfType<SongInfo>().vocalsVolume); // Play music upon level start
+        FindObjectOfType<AudioManager>().Play(SongInfo.Instance.instrumentalFile, SongInfo.Instance.instrumentalVolume); // Play music upon level start
+        FindObjectOfType<AudioManager>().Play(SongInfo.Instance.vocalsFile, SongInfo.Instance.vocalsVolume); // Play music upon level start
 
         StartCoroutine(EndSong());
     }
@@ -83,6 +83,13 @@ public class SongManager : MonoBehaviour
     IEnumerator EndSong()
     {
         yield return new WaitForSeconds(songLength);
+
+        //Stop both audio tracks if playing
+        if (FindObjectOfType<AudioManager>().IsPlaying(SongInfo.Instance.instrumentalFile))
+            FindObjectOfType<AudioManager>().Stop(SongInfo.Instance.instrumentalFile);
+        
+        if(FindObjectOfType<AudioManager>().IsPlaying(SongInfo.Instance.vocalsFile))
+            FindObjectOfType<AudioManager>().Stop(SongInfo.Instance.vocalsFile);
 
         SceneManager.LoadScene("LevelSelect");
     }

@@ -4,6 +4,7 @@ using UnityEngine;
 using System;
 using System.IO;
 using System.Linq;
+using UnityEngine.Networking;
 
 public class Beatmap_Read : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class Beatmap_Read : MonoBehaviour
 
     [HideInInspector]
     public string[,] allNoteData;
+    public float[] allNoteTimes;
     [HideInInspector]
     public bool isPlaying;
 
@@ -20,17 +22,30 @@ public class Beatmap_Read : MonoBehaviour
     private float gameTime;
     private int noteCount;
     private int currentNoteID;
+    private string readFromFilePath;
+    private string directory;
 
     // Start is called before the first frame update
     void Start()
     {
-        fileName = FindObjectOfType<SongInfo>().beatmapFile;
-        string readFromFilePath = Application.streamingAssetsPath + "/Data/" + fileName;
+        fileName = SongInfo.Instance.beatmapFile;
+
+        //Find server path if running on WebGL, if not use streamingAssetsPath
+        if(Application.platform == RuntimePlatform.WebGLPlayer)
+        {
+            //Figure out how to read file from WebGL
+        }
+        else
+        {
+            readFromFilePath = Application.streamingAssetsPath + "/Data/" + fileName;
+            directory = readFromFilePath;
+        }
 
         //Get all lines from text file
-        List<string> allNotes = File.ReadAllLines(readFromFilePath).ToList();
+        List<string> allNotes = File.ReadAllLines(directory).ToList();
         noteCount = allNotes.Count;
         allNoteData = new string[noteCount, 4];
+        allNoteTimes = new float[noteCount];
 
         int counter = 0;
         foreach(string noteData in allNotes)
@@ -39,6 +54,8 @@ public class Beatmap_Read : MonoBehaviour
             for(int i = 0; i < 3; i++)
             {
                 allNoteData[counter, i] = noteSplit[i];
+                if (i == 1)
+                    allNoteTimes[counter] = float.Parse(noteSplit[i]);
             }
             allNoteData[counter, 3] = "false";
             counter++;
@@ -51,16 +68,28 @@ public class Beatmap_Read : MonoBehaviour
     private void Update()
     {
         gameTime += Time.deltaTime;
-        //Debug.Log("Time: " + (int)gameTime);
-        for(int i = 0; i < noteCount; i++)
+
+        float nearestBeat = ((float)Math.Round((gameTime + (4 / SongInfo.Instance.scrollSpeed)) * SongInfo.Instance.measureBeats) / SongInfo.Instance.measureBeats);
+
+        int[] allPossibleNotes = FindAllIndexOf(allNoteTimes, nearestBeat * SongInfo.Instance.measureBeats);
+
+        if (allPossibleNotes.Length > 0)
         {
-            if(RoughlyEqual(gameTime, (float.Parse(allNoteData[i, 1]) / FindObjectOfType<SongManager>().measureBeats) - (4 / FindObjectOfType<SongManager>().scrollSpeed)) && allNoteData[i, 3] == "false")
+            for(int i = 0; i < allPossibleNotes.Length; i++)
             {
-                SpawnNote(i);
+                if (RoughlyEqual(gameTime + (4 / SongInfo.Instance.scrollSpeed), float.Parse(allNoteData[allPossibleNotes[i], 1]) / SongInfo.Instance.measureBeats) && allNoteData[allPossibleNotes[i], 3] == "false")
+                {
+                    SpawnNote(allPossibleNotes[i]);
+                }
             }
         }
 
     }
+
+    private static int[] FindAllIndexOf(float[] values, float key)
+    {
+        return values.Select((b, i) => object.Equals(b, key) ? i : -1).Where(i => i != -1).ToArray();
+    }//end of FindAllIndexOf
 
     private bool RoughlyEqual(float a, float b)
     {

@@ -39,6 +39,12 @@ public class AudioManager : MonoBehaviour
         s.source.volume = audioVol;
     }
 
+    public bool IsPlaying(string name) //Checks to see if the audio track is still playing
+    {
+        Sound s = Array.Find(sounds, sound => sound.name == name);
+        return s.source.isPlaying;
+    }//end of isPlaying
+
     public void ChangeVolume(string name, float audioVol)
     {
         Sound s = Array.Find(sounds, sound => sound.name == name);
