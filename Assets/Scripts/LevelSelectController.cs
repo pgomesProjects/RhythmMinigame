@@ -10,6 +10,14 @@ public class LevelSelectController : MonoBehaviour
     public GameObject[] arrowButtons;
     private int currentSong;
 
+    private PlayerControls playerControls;
+
+    void Awake()
+    {
+        playerControls = new PlayerControls();
+        playerControls.UI.Escape.performed += _ => EscapePress();
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -19,6 +27,15 @@ public class LevelSelectController : MonoBehaviour
         //Set all song windows inactive except for the first one
         for (int i = 1; i < songWindows.Length; i++)
             songWindows[i].SetActive(false);
+    }
+    private void OnEnable()
+    {
+        playerControls.Enable();
+    }
+
+    private void OnDisable()
+    {
+        playerControls.Disable();
     }
 
     // Update is called once per frame
@@ -53,7 +70,7 @@ public class LevelSelectController : MonoBehaviour
 
     public void SetBPM(float bpm) { SongInfo.Instance.bpm = bpm; }
     public void SetScrollSpeed(float scrollSpeed) { SongInfo.Instance.scrollSpeed = scrollSpeed; }
-    public void SetMeasureBeats(int measureBeats) { SongInfo.Instance.measureBeats = measureBeats; }
+    public void SetMeasureBeats(float measureBeats) { SongInfo.Instance.measureBeats = measureBeats; }
     public void SetSongLength(float songLength) { SongInfo.Instance.songLength = songLength; }
     public void SetBeatmapFile(string beatmapFile) { SongInfo.Instance.beatmapFile = beatmapFile; }
     public void SetInstrumentalFile(string instrumentalFile) { SongInfo.Instance.instrumentalFile = instrumentalFile; }
@@ -65,4 +82,9 @@ public class LevelSelectController : MonoBehaviour
     {
         SceneManager.LoadScene("SongLevel");
     }//end of PlayLevel
+
+    public void EscapePress()
+    {
+        Application.Quit();
+    }//end of EscapePress
 }

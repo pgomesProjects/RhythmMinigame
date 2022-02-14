@@ -6,7 +6,7 @@ public class SongInfo : MonoBehaviour
 {
     public float bpm = 120;
     public float scrollSpeed;
-    public int measureBeats = 8;
+    public float measureBeats = 8;
     public float songLength = 60;
 
     public string beatmapFile = "sadness_beatmap.txt";

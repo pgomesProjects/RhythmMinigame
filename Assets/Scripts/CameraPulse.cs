@@ -26,7 +26,7 @@ public class CameraPulse : MonoBehaviour
     {
         currentTimer += Time.deltaTime;
 
-        if (currentTimer >= (timer / 2))
+        if (currentTimer >= ((float)(timer / timer)))
         {
             isZoomed = true;
 
@@ -35,15 +35,15 @@ public class CameraPulse : MonoBehaviour
 
         if (isZoomed)
         {
-            virtualCamera.m_Lens.FieldOfView = Mathf.Lerp(virtualCamera.m_Lens.FieldOfView, zoomIntensity, 0.125f);
+            virtualCamera.m_Lens.FieldOfView = Mathf.Lerp(virtualCamera.m_Lens.FieldOfView, zoomIntensity, (float)(timer / SongInfo.Instance.measureBeats));
             StartCoroutine(EndZoom());
         }
     }
 
     IEnumerator EndZoom()
     {
-        yield return new WaitForSeconds(0.125f);
-        virtualCamera.m_Lens.FieldOfView = Mathf.Lerp(virtualCamera.m_Lens.FieldOfView, normalFieldOfView, 0.125f);
+        yield return new WaitForSeconds((float)(timer / SongInfo.Instance.measureBeats));
+        virtualCamera.m_Lens.FieldOfView = Mathf.Lerp(virtualCamera.m_Lens.FieldOfView, normalFieldOfView, (float)(timer / SongInfo.Instance.measureBeats));
         isZoomed = false;
     }
 }

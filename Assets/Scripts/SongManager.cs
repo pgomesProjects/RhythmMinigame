@@ -12,7 +12,7 @@ public class SongManager : MonoBehaviour
     [HideInInspector]
     public float scrollSpeed;
     [HideInInspector]
-    public int measureBeats = 8;
+    public float measureBeats = 8;
     public TextMeshProUGUI comboText;
     public TextMeshProUGUI statText;
     [HideInInspector]
