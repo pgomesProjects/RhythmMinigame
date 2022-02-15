@@ -34,6 +34,8 @@ public class Beatmap_Read : MonoBehaviour
         if(Application.platform == RuntimePlatform.WebGLPlayer)
         {
             //Figure out how to read file from WebGL
+            readFromFilePath = Application.dataPath + "/StreamingAssets/Data/" + fileName;
+            directory = readFromFilePath;
         }
         else
         {
