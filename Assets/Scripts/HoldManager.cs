@@ -58,18 +58,24 @@ public class HoldManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.Translate(Vector3.back * Time.deltaTime * FindObjectOfType<SongManager>().noteSpeed);
+        //When not paused, move the hold note
+        if (!FindObjectOfType<SongManager>().isPaused)
+        {
+            transform.Translate(Vector3.back * Time.deltaTime * FindObjectOfType<SongManager>().noteSpeed);
 
-        if (transform.position.z <= lowerBound)
-            Destroy(gameObject);
+            //If the hold note hits the lower bound, destroy the note
+            if (transform.position.z <= lowerBound)
+                Destroy(gameObject);
 
-        //Check to see if the player releases on the right hold note
-        if(canHold)
-            CheckRelease();
+            //Check to see if the player releases on the right hold note
+            if (canHold)
+                CheckRelease();
+        }
     }
 
     private void CheckRelease()
     {
+        //If the player releases the hold in the middle of the hold, destroy the whole hold
         switch (currentButton.buttonIndex)
         {
             case 0:
@@ -230,9 +236,12 @@ public class HoldManager : MonoBehaviour
     public void DestroyHold()
     {
         HoldManager[] holdNotes = FindObjectsOfType<HoldManager>();
+        //Find all of the holds with the same parent and destroy them
         for (int i = 0; i < holdNotes.Length; i++)
             if (holdNotes[i].parentID == parentID)
                 Destroy(holdNotes[i].gameObject);
+
+        //Reset the combo as a miss
         FindObjectOfType<SongManager>().ResetCombo(4);
     }//end of DestroyHold
 }

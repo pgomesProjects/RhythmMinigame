@@ -18,25 +18,32 @@ public class CameraPulse : MonoBehaviour
     void Start()
     {
         isZoomed = false;
-        timer = FindObjectOfType<SongManager>().bpm / 60;
+        //How many seconds are in one beat
+        timer = SongInfo.Instance.bpm / 60.0f;
         virtualCamera.m_Lens.FieldOfView = normalFieldOfView;
     }
 
     void Update()
     {
-        currentTimer += Time.deltaTime;
-
-        if (currentTimer >= ((float)(timer / timer)))
+        //Pulse the camera when not paused
+        if (!FindObjectOfType<SongManager>().isPaused)
         {
-            isZoomed = true;
+            currentTimer += Time.deltaTime;
 
-            currentTimer = 0;
-        }
+            //If the current timer hits the specified time, pulse the camera and reset
+            if (currentTimer >= ((float)(timer / 2)))
+            {
+                isZoomed = true;
 
-        if (isZoomed)
-        {
-            virtualCamera.m_Lens.FieldOfView = Mathf.Lerp(virtualCamera.m_Lens.FieldOfView, zoomIntensity, (float)(timer / SongInfo.Instance.measureBeats));
-            StartCoroutine(EndZoom());
+                currentTimer = 0;
+            }
+
+            //Use a lerp to zoom into the camera and start a coroutine to zoom back out
+            if (isZoomed)
+            {
+                virtualCamera.m_Lens.FieldOfView = Mathf.Lerp(virtualCamera.m_Lens.FieldOfView, zoomIntensity, (float)(timer / SongInfo.Instance.measureBeats));
+                StartCoroutine(EndZoom());
+            }
         }
     }
 

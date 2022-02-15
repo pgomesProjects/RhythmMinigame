@@ -46,6 +46,7 @@ public class LevelSelectController : MonoBehaviour
 
     public void SwitchSongSelect(int direction)
     {
+        //Change song windows when the arrows are hit
         songWindows[currentSong].SetActive(false);
         currentSong += direction;
         songWindows[currentSong].SetActive(true);
@@ -55,12 +56,12 @@ public class LevelSelectController : MonoBehaviour
 
     private void CheckArrows()
     {
-
+        //If at the beginning of the list, hide the left arrow in the menu
         if (currentSong == 0)
             arrowButtons[0].SetActive(false);
         else
             arrowButtons[0].SetActive(true);
-
+        //If at the end of the list, hide the right arrow in the menu
         if (currentSong >= songWindows.Length - 1)
             arrowButtons[1].SetActive(false);
         else

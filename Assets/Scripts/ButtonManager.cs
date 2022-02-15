@@ -55,6 +55,7 @@ public class ButtonManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //Depending on the note pressed, scale the note and change the color of the note. If released, reset
         switch(buttonIndex) {
             case 0:
                 if (keyPressed[(int)Controls.LEFT])

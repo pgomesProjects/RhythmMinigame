@@ -50,13 +50,16 @@ public class Beatmap_Read : MonoBehaviour
         int counter = 0;
         foreach(string noteData in allNotes)
         {
+            //Split the data using a comma delimiter
             string [] noteSplit = noteData.Split(',');
             for(int i = 0; i < 3; i++)
             {
                 allNoteData[counter, i] = noteSplit[i];
+                //If storing the beat, also store it in the master times array
                 if (i == 1)
                     allNoteTimes[counter] = float.Parse(noteSplit[i]);
             }
+            //Create an extra cell which says whether the note has been spawned or not
             allNoteData[counter, 3] = "false";
             counter++;
         }
@@ -67,27 +70,33 @@ public class Beatmap_Read : MonoBehaviour
 
     private void Update()
     {
-        gameTime += Time.deltaTime;
-
-        float nearestBeat = ((float)Math.Round((gameTime + (4 / SongInfo.Instance.scrollSpeed)) * SongInfo.Instance.measureBeats) / SongInfo.Instance.measureBeats);
-
-        int[] allPossibleNotes = FindAllIndexOf(allNoteTimes, nearestBeat * SongInfo.Instance.measureBeats);
-
-        if (allPossibleNotes.Length > 0)
+        //When the game is not paused, spawn the notes
+        if (!FindObjectOfType<SongManager>().isPaused)
         {
-            for(int i = 0; i < allPossibleNotes.Length; i++)
+            gameTime += Time.deltaTime;
+
+            //Find the nearest beat with an offset to allow the notes to spawn early
+            float nearestBeat = ((float)Math.Round((gameTime + ((SongInfo.Instance.measureBeats / 2) / SongInfo.Instance.scrollSpeed)) * SongInfo.Instance.measureBeats) / SongInfo.Instance.measureBeats);
+
+            int[] allPossibleNotes = FindAllIndexOf(allNoteTimes, nearestBeat * SongInfo.Instance.measureBeats);
+
+            if (allPossibleNotes.Length > 0)
             {
-                if (RoughlyEqual(gameTime + (4 / SongInfo.Instance.scrollSpeed), float.Parse(allNoteData[allPossibleNotes[i], 1]) / SongInfo.Instance.measureBeats) && allNoteData[allPossibleNotes[i], 3] == "false")
+                for (int i = 0; i < allPossibleNotes.Length; i++)
                 {
-                    SpawnNote(allPossibleNotes[i]);
+                    //If the note time is just about the same time as the game's recorded time with the offset, spawn the note
+                    if (RoughlyEqual(gameTime + ((SongInfo.Instance.measureBeats / 2) / SongInfo.Instance.scrollSpeed), float.Parse(allNoteData[allPossibleNotes[i], 1]) / SongInfo.Instance.measureBeats) && allNoteData[allPossibleNotes[i], 3] == "false")
+                    {
+                        SpawnNote(allPossibleNotes[i]);
+                    }
                 }
             }
         }
-
     }
 
     private static int[] FindAllIndexOf(float[] values, float key)
     {
+        //Selects all values that equals the given key and stores it in an array
         return values.Select((b, i) => object.Equals(b, key) ? i : -1).Where(i => i != -1).ToArray();
     }//end of FindAllIndexOf
 
@@ -100,8 +109,11 @@ public class Beatmap_Read : MonoBehaviour
 
     private void SpawnNote(int currentIndex)
     {
+        //Get the hold count and give the note an ID
         note.GetComponent<NoteManager>().holdCount = int.Parse(allNoteData[currentIndex, 2]);
         note.GetComponent<NoteManager>().noteID = currentNoteID;
+
+        //Depending on the row the note is spawned, color the note, rotate the arrow accordingly, and then instantiate
         if (allNoteData[currentIndex, 0] == "left")
         {
             note.GetComponent<NoteManager>().noteColor = new Color32(204, 91, 154, 255);
@@ -130,6 +142,7 @@ public class Beatmap_Read : MonoBehaviour
             Instantiate(note, noteSpawners[3].transform.position, note.transform.rotation);
         }
         currentNoteID += 1;
+        //Tell the array that the note has been spawned
         allNoteData[currentIndex, 3] = "true";
     }//end of SpawnNote
 

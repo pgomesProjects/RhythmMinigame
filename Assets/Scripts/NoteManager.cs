@@ -78,51 +78,63 @@ public class NoteManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.Translate(Vector3.back * Time.deltaTime * FindObjectOfType<SongManager>().noteSpeed);
-
-        if (canHit)
+        if (!FindObjectOfType<SongManager>().isPaused)
         {
-            //Check to see if note can be hit
-            switch (currentButton.buttonIndex)
+            //Move the note backwards at the specified note speed
+            transform.Translate(Vector3.back * Time.deltaTime * FindObjectOfType<SongManager>().noteSpeed);
+
+            //If the player can hit the note
+            if (canHit)
             {
-                case 0:
-                    if (keyPressed[(int)Controls.LEFT])
-                        NoteHit();
-                    break;
-                case 1:
-                    if (keyPressed[(int)Controls.DOWN])
-                        NoteHit();
-                    break;
-                case 2:
-                    if (keyPressed[(int)Controls.UP])
-                        NoteHit();
-                    break;
-                case 3:
-                    if (keyPressed[(int)Controls.RIGHT])
-                        NoteHit();
-                    break;
+                //Check to see if the player inputted the correct button for the note hit
+                switch (currentButton.buttonIndex)
+                {
+                    case 0:
+                        if (keyPressed[(int)Controls.LEFT])
+                            NoteHit();
+                        break;
+                    case 1:
+                        if (keyPressed[(int)Controls.DOWN])
+                            NoteHit();
+                        break;
+                    case 2:
+                        if (keyPressed[(int)Controls.UP])
+                            NoteHit();
+                        break;
+                    case 3:
+                        if (keyPressed[(int)Controls.RIGHT])
+                            NoteHit();
+                        break;
+                }
             }
-        }
 
-        if (transform.position.z <= lowerBound)
-        {
-            canHit = false;
-            currentButton = null;
-            FindObjectOfType<SongManager>().ResetCombo(4);
-            Destroy(gameObject);
+            //If the note hits the lower bound, record as a miss and destroy the object
+            if (transform.position.z <= lowerBound)
+            {
+                canHit = false;
+                currentButton = null;
+                FindObjectOfType<SongManager>().ResetCombo(4);
+                Destroy(gameObject);
+            }
         }
     }
 
     private void NoteHit()
     {
+        //Perfect hit logic
         if (Mathf.Abs(currentButton.transform.position.z - gameObject.transform.position.z) <= 0.3f)
             FindObjectOfType<SongManager>().AddToCombo(0);
+        //Great hit logic
         else if (Mathf.Abs(currentButton.transform.position.z - gameObject.transform.position.z) <= 0.75f)
             FindObjectOfType<SongManager>().AddToCombo(1);
+        //Good hit logic
         else if (currentButton.transform.position.z - gameObject.transform.position.z <= 1.0f)
             FindObjectOfType<SongManager>().AddToCombo(2);
+        //Bad hit logic
         else if (currentButton.transform.position.z - gameObject.transform.position.z <= 1.64f)
              FindObjectOfType<SongManager>().ResetCombo(3);
+
+        //Destroy the note after hitting
         Destroy(gameObject);
     }//end of NoteHit
     private void OnTriggerEnter(Collider other)

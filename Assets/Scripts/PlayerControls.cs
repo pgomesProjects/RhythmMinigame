@@ -162,6 +162,22 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""LowerVolume"",
+                    ""type"": ""Button"",
+                    ""id"": ""bfcee2c5-62f8-4118-a5ee-0f1910eb6228"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""RaiseVolume"",
+                    ""type"": ""Button"",
+                    ""id"": ""186fb035-8267-481e-8d2a-f02b0b63a4a2"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -173,6 +189,28 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""KeyboardInput"",
                     ""action"": ""Escape"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0885074f-9f85-47fb-80b3-9f66483601a4"",
+                    ""path"": ""<Keyboard>/minus"",
+                    ""interactions"": ""Press"",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardInput"",
+                    ""action"": ""LowerVolume"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ffc90438-7a75-48a0-86ec-7c7bd13a494b"",
+                    ""path"": ""<Keyboard>/equals"",
+                    ""interactions"": ""Press"",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardInput"",
+                    ""action"": ""RaiseVolume"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -202,6 +240,8 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Escape = m_UI.FindAction("Escape", throwIfNotFound: true);
+        m_UI_LowerVolume = m_UI.FindAction("LowerVolume", throwIfNotFound: true);
+        m_UI_RaiseVolume = m_UI.FindAction("RaiseVolume", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -319,11 +359,15 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     private readonly InputActionMap m_UI;
     private IUIActions m_UIActionsCallbackInterface;
     private readonly InputAction m_UI_Escape;
+    private readonly InputAction m_UI_LowerVolume;
+    private readonly InputAction m_UI_RaiseVolume;
     public struct UIActions
     {
         private @PlayerControls m_Wrapper;
         public UIActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Escape => m_Wrapper.m_UI_Escape;
+        public InputAction @LowerVolume => m_Wrapper.m_UI_LowerVolume;
+        public InputAction @RaiseVolume => m_Wrapper.m_UI_RaiseVolume;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -336,6 +380,12 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Escape.started -= m_Wrapper.m_UIActionsCallbackInterface.OnEscape;
                 @Escape.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnEscape;
                 @Escape.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnEscape;
+                @LowerVolume.started -= m_Wrapper.m_UIActionsCallbackInterface.OnLowerVolume;
+                @LowerVolume.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnLowerVolume;
+                @LowerVolume.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnLowerVolume;
+                @RaiseVolume.started -= m_Wrapper.m_UIActionsCallbackInterface.OnRaiseVolume;
+                @RaiseVolume.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnRaiseVolume;
+                @RaiseVolume.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnRaiseVolume;
             }
             m_Wrapper.m_UIActionsCallbackInterface = instance;
             if (instance != null)
@@ -343,6 +393,12 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Escape.started += instance.OnEscape;
                 @Escape.performed += instance.OnEscape;
                 @Escape.canceled += instance.OnEscape;
+                @LowerVolume.started += instance.OnLowerVolume;
+                @LowerVolume.performed += instance.OnLowerVolume;
+                @LowerVolume.canceled += instance.OnLowerVolume;
+                @RaiseVolume.started += instance.OnRaiseVolume;
+                @RaiseVolume.performed += instance.OnRaiseVolume;
+                @RaiseVolume.canceled += instance.OnRaiseVolume;
             }
         }
     }
@@ -366,5 +422,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     public interface IUIActions
     {
         void OnEscape(InputAction.CallbackContext context);
+        void OnLowerVolume(InputAction.CallbackContext context);
+        void OnRaiseVolume(InputAction.CallbackContext context);
     }
 }
